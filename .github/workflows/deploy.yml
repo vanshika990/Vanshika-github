@@ -6,55 +6,32 @@ on:
       - main
 
 jobs:
-  build-test-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 📥 Step 1: Get code from GitHub
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 🧪 Step 2: Test (basic validation)
-      - name: Validate HTML file
+      - name: Check files
         run: |
-          if [ ! -f index.html ]; then
-            echo "index.html not found ❌"
-            exit 1
-          fi
-          echo "HTML file exists ✅"
+          test -f index.html
+          test -f style.css
 
-      # 🎨 Step 3: Validate CSS
-      - name: Check CSS file
-        run: |
-          if [ ! -f style.css ]; then
-            echo "style.css missing ❌"
-            exit 1
-          fi
-          echo "CSS file exists ✅"
-
-      # 🏗️ Step 4: Build (for static = just prepare files)
-      - name: Prepare build folder
-        run: |
-          mkdir build
-          cp index.html style.css build/
-
-      # 🚀 Step 5: Deploy to EC2
-      - name: Deploy to AWS EC2
+      - name: Deploy to EC2
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "build/*"
+          source: "."
           target: "/var/www/html"
           rm: true
 
-      # 🔁 Step 6: Restart Apache (your server)
       - name: Restart Apache
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            sudo systemctl restart apache2
+          script: sudo systemctl restart apache2
