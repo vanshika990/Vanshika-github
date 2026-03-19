@@ -3,26 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My First Website</title>
-    <style>
-        body {
-            font-family: Arial;
-            text-align: center;
-            margin-top: 100px;
-            background-color: #f4f4f4;
-        }
-        h1 {
-            color: #333;
-        }
-        p {
-            color: #666;
-        }
-    </style>
+    <title>My Website</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <h1>🚀 Welcome to My Website</h1>
-    <p>This site is deployed from GitHub to AWS</p>
+    <header>
+        <h1>Welcome to My Website 🚀</h1>
+        <p>This is deployed using GitHub CI/CD</p>
+    </header>
+
+    <section class="content">
+        <h2>About Me</h2>
+        <p>Hello! This is my static website hosted on AWS Ubuntu server.</p>
+
+        <button onclick="showMessage()">Click Me</button>
+        <p id="message"></p>
+    </section>
+
+    <footer>
+        <p>© 2026 My Website</p>
+    </footer>
+
+    <script>
+        function showMessage() {
+            document.getElementById("message").innerText = "You clicked the button 🎉";
+        }
+    </script>
 
 </body>
 </html>
