@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Check files
         run: |
@@ -24,7 +24,8 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2___KEY }}
-          source: "."
+          port: 22
+          source: "./*"
           target: "/var/www/html"
           rm: true
 
@@ -33,5 +34,7 @@ jobs:
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2___KEY}}
-          script: sudo systemctl restart apache2
+          key: ${{ secrets.EC2___KEY }}
+          port: 22
+          script: |
+            sudo systemctl restart apache2
