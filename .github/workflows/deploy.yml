@@ -1,4 +1,4 @@
-name: CI/CD Pipeline - Static Website
+name: Deploy to EC2
 
 on:
   push:
@@ -10,31 +10,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Check files
-        run: |
-          test -f index.html
-          test -f style.css
-
-      - name: Deploy to EC2
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2___KEY }}
-          port: 22
-          source: "./*"
-          target: "/var/www/html"
-          rm: true
-
-      - name: Restart Apache
-        uses: appleboy/ssh-action@v0.1.10
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2___KEY }}
-          port: 22
-          script: |
-            sudo systemctl restart apache2
+    - name: Deploy to EC2
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: 13.40.29.96
+        username: ubuntu
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          cd /var/www/html
+          git pull origin main
